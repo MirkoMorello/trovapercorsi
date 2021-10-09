@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Percorso <%= percorso %></title>
+    <style>
+      #mapid { height: 500px; }
+    </style>
+    <link rel='stylesheet' href='/bower_components/bootstrap/dist/css/bootstrap.css' />
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+    </head>
+  <body>
+    <div class="container">
+      <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+        <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+          <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
+        </a>
+  
+        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+          <li><a href="/" class="nav-link px-2 link-secondary">Home</a></li>
+          <li><a href="/list" class="nav-link px-2 link-dark">Percorsi</a></li>
+          <li><a href="/mappa" class="nav-link px-2 link-dark">Mappa</a></li>
+        </ul>
+  
+        <div class="col-md-3 text-end">
+          <% if (user) { %>
+          <a href="/users/logout" type="button" class="btn btn-outline-primary me-2">Logout</a>
+          <% } else {%>
+          <a href="/users/login" type="button" class="btn btn-outline-primary me-2">Login</a>
+          <a href="/users/register" type="button" class="btn btn-primary">Sign-up</a>
+          <% } %>
+        </div>
+      </header>
+    </div>
+    
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container">
+        <h1 class="display-4">Percorso n.<%= percorso %></h1>
+        <p class="lead">Qui potrai visualizzare, commentare e scoprire di più sul percorso n.<%= percorso %>. Vuoi affrontare un viaggio su questo percorso? Scrivicelo nei commenti, potresti trovare compagnia!</p>
+      </div>
+    </div>
+
+      <!--Google map-->
+      <div id="mapid"></div>
+      <!--Google Maps-->
+
+    <table class="table table-bordered" id = 'contenuti'>
+    </table>
+
+
+    <div class = "container">
+    <form action="/percorso/<%= percorso %>" method="post" class="form">
+      <div class="form-group">
+        <label for="exampleFormControlTextarea1">Vuoi segnalare qualcosa su questo percorso o cerchi compagnia?</label>
+        <textarea class="form-control" name="comment" id="comment" rows="4" required></textarea>
+      </div>
+      <br>
+      <div class="col-md-3 text-end">
+        <div class="form-group">
+        <% if (user) { %>
+            <input class = "btn btn-primary" type="submit" value="posta commento">
+        <% } else {%>
+            <button type="button" class="btn btn-outline-danger">Logga per postare questo commento</button>
+        <% } %>
+      </div>
+    </form>
+    </div>
+
+
+    <section style="background-color: #ffffff;">
+      <div class="container my-5 py-5">
+        <div class="row d-flex justify-content-center">
+          <div class="col-md-12 col-lg-10">
+            <div class="card text-dark" id = "comments">
+          </div>
+        </div>
+      </div>
+    </section>
+    
+
+    <script>
+      let i = 0;
+      console.log(<% comment %>);
+      <% comment.forEach(function(comm) { %>
+      i ++
+      if (i==1){
+        comment_bar = '<h4 class="mb-0">Commenti recenti</h4>\
+                        <p class="fw-light mb-4 pb-2">Guarda cosa dicono gli altri utenti del percorso <%= percorso %></p>'
+      }else{
+        comment_bar = '';
+      }
+      document.getElementById("comments").innerHTML +='\
+              <div class="card-body p-4" >\
+                \ '+comment_bar+'\
+               <div class="d-flex flex-start">\
+                  <img\
+                    class="rounded-circle shadow-1-strong me-3"\
+                    src="../images/community.png"\
+                    alt="avatar"\
+                    width="60"\
+                    height="60"\
+                  />\
+                  <div>\
+                    <h6 class="fw-bold mb-1"><%= comm.username %></h6>\
+                    <div class="d-flex align-items-center mb-3">\
+                      <p class="mb-0">\
+                        <%= comm.date.toLocaleDateString("it-IT", { hour: "2-digit", minute:"2-digit", weekday: "long", year: "numeric", month: "long", day: "numeric"}) %>\
+                        <span class="badge bg-success">utente</span>\
+                      </p>\
+                      <a href="#!" class="link-muted"\
+                        ><i class="fas fa-pencil-alt ms-2"></i\
+                      ></a>\
+                      <a href="#!" class="link-muted"><i class="fas fa-redo-alt ms-2"></i></a>\
+                      <a href="#!" class="link-muted"><i class="fas fa-heart ms-2"></i></a>\
+                    </div>\
+                    <p class="mb-0">\
+                      <%- comm.body.replace(/\r\n/g, "<br>") %> '+" " /* fatto per fare escaping e contemplare l'eleganza di js + ejs + html contemporaneamente, GO WILD BOY! */ +'\
+                    </p>\
+                  </div>\
+                </div>\
+              </div>\
+            </div>\
+              <hr class="my-0" />';
+    <% }); %>
+    </script>
+
+  <script>
+    var map = L.map('mapid').setView([45.526631, 9.576685], 13);
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: 'pk.eyJ1IjoidGVoYmFuZ2VyIiwiYSI6IjAzOTk2YTVlODNkYTE5NDAzMjA1NjkyMzJmNzAyY2IxIn0.-Blawiw8um7RYAhfYofJ2Q'
+    }).addTo(map);
+
+    function onEachFeature(feature, layer) {
+      if (feature.properties && feature.properties.popupContent) {
+          layer.bindPopup(feature.properties.popupContent);
+      }
+    }
+
+    var data;
+    var tabella;
+    function successXhr(){
+            let dato = JSON.parse(this.response);
+            data = dato[0];
+            let geojsonFeature = {
+              "type": "Feature",
+              "properties": {
+              "id" : data.id,
+              "comune": data.nome_com,
+              "provincia": data.provincia,
+              "popupContent": "Percorso numero "+data.id+"<br>Comune di "+data.nome_com+" in provincia di " +data.nome_pro+ "<br>lunghezza "+ data.length + " m"
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": data.the_geom.coordinates,
+              }
+          };
+          L.geoJSON(geojsonFeature, {
+            onEachFeature: onEachFeature
+          }).addTo(map);
+
+          //centrare la visuale
+          let l = Math.round(data.the_geom.coordinates.length/2);
+          map.setView([data.the_geom.coordinates[l][1], data.the_geom.coordinates[l][0]], 15);
+
+          tabella = '\
+            <thead>\
+              <tr>\
+                <th scope="col">ID</th>\
+                <th scope="col">Comune</th>\
+                <th scope="col">Provincia</th>\
+                <th scope="col">Tipo</th>\
+                <th scope="col">Lunghezza (metri)</th>\
+                <th scope="col">Stato</th>\
+                <th scope="col">Fonte</th>\
+              </tr>\
+            </thead>\
+            <tbody>\
+              <tr>\
+                <td>'+data.id+'</td> \
+                <td>'+data.nome_com+'</td> \
+                <td>'+data.nome_pro+'</td> \
+                <td>'+data.tipo+'</td> \
+                <td>'+data.length+'</td> \
+                <td>'+data.stato+'</td> \
+                <td>'+data.fonte+'</td> \
+              </tr>\
+            </tbody>\
+          '
+          document.getElementById("contenuti").innerHTML += tabella;
+        }
+        function errorXhr(err){
+            console.log("error", err); 
+        }
+        var xhr = new XMLHttpRequest();
+        xhr.onload = successXhr;
+        xhr.onerror = errorXhr;
+        xhr.open('GET', 'https://www.dati.lombardia.it/resource/992m-35vj.json?id='+<%= percorso %>); // da https://www.dati.lombardia.it/Territorio/PROVINCIA-MONZA-BRIANZA-Piste-ciclabili/xh9r-g2rn
+        xhr.send();
+        // qui al posto della fetch è stata utilizzata una semplice xmlhttprequest, per esercizio più che per pura necessità.
+
+
+      
+  </script>
+    <footer class="container">
+      <p> Progetto Web Development Mirko Morello, (email) morello.mrk@gmail.com     (email) mirko.morello@studenti.unimi.it   (telegram) @MirkoMo </p>
+    </footer>
+</body>
+</html>

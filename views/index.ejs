@@ -1,0 +1,212 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.84.0">
+    <title>Trova Percorsi</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/carousel/">
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+
+    
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+
+<meta name="theme-color" content="#7952b3">
+
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+    
+    <!-- Custom styles for this template -->
+    <link href="/stylesheets/carousel.css" rel="stylesheet">
+  </head>
+  <body>
+    
+    <div class="container">
+      <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+        <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+          <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
+        </a>
+  
+        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+          <li><a href="/" class="nav-link px-2 link-secondary">Home</a></li>
+          <li><a href="/list" class="nav-link px-2 link-dark">Percorsi</a></li>
+          <li><a href="/mappa" class="nav-link px-2 link-dark">Mappa</a></li>
+        </ul>
+
+        <div class="col-md-3 text-end">
+          <% if (user) { %>
+            <a href="/users/logout" type="button" class="btn btn-outline-primary me-2">Logout</a>
+          <% } else {%>
+          <a href="/users/login" type="button" class="btn btn-outline-primary me-2">Login</a>
+          <a href="/users/register" type="button" class="btn btn-primary">Sign-up</a>
+          <% } %>
+        </div>
+      </header>
+    </div>
+
+<main>
+
+  <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        
+        <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"/></svg>
+        <img class="d-block w-100" src="https://i.redd.it/o96asqovzgi51.jpg" alt="First slide">
+        
+        <div class="container">
+          <div class="carousel-caption text-start">
+            <h1>Benvenuto su Trovapercorsi!</h1>
+            <p>Trovapercorsi è uno strumento semplice e immediato per trovare i percorsi ciclabili nella tua zona</p>
+            <p><a class="btn btn-lg btn-primary" href="/users/register">Registrati</a></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-item">
+        <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"/></svg>
+        <img class="d-block w-100" src="..\images\bycicle.jpg" alt="First slide">
+        <div class="container">
+          <div class="carousel-caption">
+            <h1>Trova il percorso fatto per te</h1>
+            <p>Esplora adesso tutti i nostri percorsi con la nostra ricerca avanzata</p>
+            <p><a class="btn btn-lg btn-primary" href="/list">Vai ai percorsi</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"/></svg>
+        <img class="d-block w-100" src="https://wallpapercave.com/wp/wp4313180.jpg" alt="First slide">
+
+        <div class="container">
+          <div class="carousel-caption text-end">
+            <h1>Esplora la nostra mappa</h1>
+            <p>Non sai cosa scegliere? Dai un'occhiata alla nostra mappa completa</p>
+            <p><a class="btn btn-lg btn-primary" href="/mappa">Vai alla mappa</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+
+  <div class="container marketing">
+
+    <!-- Three columns of text below the carousel -->
+    <div class="row">
+      <div class="col-lg-4">
+        <img src= "..\images\community.png" width ='140px' height ='140px'>
+
+        <h2>Community</h2>
+        <p>Iscriviti ora per poter commentare sotto tutti i percorsi, potresti trovare compagnia!</p>
+        <p><a class="btn btn-secondary" href="/users/register">Vai adesso &raquo;</a></p>
+      </div><!-- /.col-lg-4 -->
+      <div class="col-lg-4">
+        <img src= "..\images\map.png" width ='140px' height ='140px'>
+        
+        <h2>Mappe</h2>
+        <p>Le nostre mappe sono complete e semplici da intuire, con link veloci alle informazioni del singolo percorso</p>
+        <p><a class="btn btn-secondary" href="/mappa">Vai adesso &raquo;</a></p>
+      </div><!-- /.col-lg-4 -->
+      <div class="col-lg-4">
+        <img src= "..\images\setting.png" width ='140px' height ='140px'>
+
+        <h2>Liste</h2>
+        <p>Esplora tutti i nostri percorsi con il nostro tool di ricerca avanzata</p>
+        <p><a class="btn btn-secondary" href="/list">Vai adesso &raquo;</a></p>
+      </div><!-- /.col-lg-4 -->
+    </div><!-- /.row -->
+
+
+    <!-- START THE FEATURETTES -->
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <div class="col-md-7">
+        <h2 class="featurette-heading">Le nostre mappe sono semplici. <span class="text-muted"> Non ti perderai mai.</span></h2>
+        <p class="lead">Vuoi andare da qualche parte? E' semplice. Nulla di più.</p>
+      </div>
+      <div class="col-md-5">
+        <img src= "..\images\route.jpg" width ='500' height ='500'>
+
+      </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <div class="col-md-7 order-md-2">
+        <h2 class="featurette-heading">Le nostre mappe sono precise. <span class="text-muted">Vedrai.</span></h2>
+        <p class="lead">Non sapete quanto possa essere lungo il vostro viaggio in bici? Le nostre mappe hanno un livello di dettaglio allo stato dell'arte. </p>
+      </div>
+      <div class="col-md-5 order-md-1">
+        <img src= "..\images\map.jpg" width ='500' height ='500'>
+        
+
+      </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <div class="col-md-7">
+        <h2 class="featurette-heading">Le nostre mappe sono aggiornate. <span class="text-muted"> Non c'è nulla di più sicuro.</span></h2>
+        <p class="lead">Nel momento stesso in cui verrà costruita una nuova pista ciclabile, saprete dove trovarla. I nostri dati sono live dal sito della regione Lombardia ogni volta che accedete al sito. </p>
+      </div>
+      <div class="col-md-5">
+        <img src= "..\images\secur.jpg" width ='500' height ='500'>
+
+      </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <!-- /END THE FEATURETTES -->
+
+  </div><!-- /.container -->
+
+
+  <!-- FOOTER -->
+  <footer class="container">
+    <p> Progetto Web Development Mirko Morello, (email) morello.mrk@gmail.com     (email) mirko.morello@studenti.unimi.it   (telegram) @MirkoMo </p>
+  </footer>
+</main>
+    <script src="/docs/5.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  </body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel='stylesheet' href='/public/stylesheets/style.css' />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+  </head>
+  <body>
+    <div class="container">
+      <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+        <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+          <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
+        </a>
+  
+        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+          <li><a href="/" class="nav-link px-2 link-secondary">Home</a></li>
+          <li><a href="/list" class="nav-link px-2 link-dark">Percorsi</a></li>
+          <li><a href="/mappa" class="nav-link px-2 link-dark">Mappa</a></li>
+        </ul>
+  
+        <div class="col-md-3 text-end">
+            <% if (user) { %>
+            <a href="/users/logout" type="button" class="btn btn-outline-primary me-2">Logout</a>
+            <% } else {%>
+            <a href="/users/login" type="button" class="btn btn-outline-primary me-2">Login</a>
+            <a href="/users/register" type="button" class="btn btn-primary">Sign-up</a>
+            <% } %>
+        </div>
+      </header>
+    </div>
+
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+          <h1 class="display-4"> Percorsi </h1>
+          <p class="lead">Cerca tra l'elenco il percorso che più ti interessa, cliccando sul percorso otterrai maggiori informazioni</p>
+        </div>
+      </div>
+    <br>
+
+
+
+        <div class = 'col-md-12 text-center'>
+        <p>
+            <a class="btn btn-primary" data-toggle="collapse" href="#collapse" role="button" aria-expanded="false" aria-controls="collaps">
+              Ricerca avanzata
+            </a>
+        </p>
+        </div>
+
+
+    
+    <div class="container-fluid panel-collapse collapse in shadow-sm p-3 mb-5 bg-white rounded" id ='collapse' style = "max-width: 80%;"">
+        <div class="row">
+            <div class="col" id = "check1">
+            </div>
+
+            <div class="col" id = "check2">
+            </div>
+
+            <div class="col" id = "check3">
+            </div>
+
+            <div class="col" id = "check4">
+            </div>
+
+            <div class="col" id = "check5">
+            </div>
+
+            <div class="col" id = "check6">
+            </div>
+
+            <div class="col">
+                <a>Lunghezza percorso</a>
+                <input class="form-control form-control-sm" type="text" placeholder="minimo" id = "lunghezza-min">
+                <input class="form-control form-control-sm" type="text" placeholder="massimo"id = "lunghezza-max">
+            </div>
+    </div>
+            <br>
+            <div class="container float-right">
+                <button type="button" class="btn btn-secondary" onclick="resetCheckbox()">Reset</button>
+            </div>
+            <div class="col-md-12 text-center">
+                <button type="button" class="btn btn-primary btn-lg" id = "scroll" onclick="cerca()">Cerca</button>
+            </div>
+
+    </div>
+<br>
+
+
+
+<br><br>
+    <ul>
+    <div class="row">
+        <div class="col-4">
+          <div class="list-group" id="list-tab" role="tablist">
+          </div>
+        </div>
+        <div class="col-8">
+          <div class="tab-content" id="nav-tabContent" data-bs-spy="scroll" data-bs-target="#list-tab" data-bs-offset="0" class="scrollspy-example" tabindex="0">
+          </div>
+        </div>
+      </div>
+    </ul>
+
+    <a href="#" id="toTopBtn" class="cd-top text-replace js-cd-top cd-top--is-visible cd-top--fade-out" data-abc="true"></a>
+    <script>
+
+        var dataset = []
+        var comuni_totali = []
+
+        function resetCheckbox(){
+            $('input[type=checkbox]').each(function() { 
+                        this.checked = false; 
+                        });
+            $('input[type="text"]').val('');
+            $('input[type="text"]').val('');
+        }
+
+        function addPercorso(comune, data){
+
+            var nome = comune;
+            let num = 0
+            let id = nome.replace(/\s/g, ''); //elimino spazi
+            id = id.replace(/`/g, '');        //elimino `
+            let description = '    <table class="table table-hover">\
+                                    <thead>\
+                                      <tr>\
+                                        <th scope="col">#</th>\
+                                        <th scope="col">ID</th>\
+                                        <th scope="col">Tipo</th>\
+                                        <th scope="col">Lunghezza (metri)</th>\
+                                        <th scope="col">Scopri di più</th>\
+                                    </tr>\
+                                    </thead>\
+                                    <tbody>';
+
+            data.forEach(element =>{
+                if (element.nome_com == comune){
+                    num ++;
+                    description += '<tr>\
+                                        <th scope="row">'+num+'</th>\
+                                        <td>'+element.id+'</td> \
+                                        <td>'+element.tipo+'</td> \
+                                        <td>'+element.length+'</td> \
+                                        <td><a href = "/percorso/'+element.id+'">link</a></td> \
+                                    </tr>'
+                }
+            });
+            description += "</tbody>\
+                            </table>";
+            
+            document.getElementById("list-tab").innerHTML += '<a class="list-group-item list-group-item-action" id="list-' + id + '-list" data-toggle="list" href="#list-'+id+'" role="tab" aria-controls="home" >'+nome+'</a>'
+            document.getElementById("nav-tabContent").innerHTML +='<div class="tab-pane fade" id="list-'+id+'" role="tabpanel" aria-labelledby="list-'+id+'">'+description+'</div>';
+        }
+
+        function createTable(comuni){
+            comuni.forEach((comune) => addPercorso(comune, dataset));
+        }
+
+        function contaComuni(data){
+            let comuni = [];
+            data.forEach(function(element){
+                if (!comuni.includes(element.nome_com)){
+                    comuni.push(element.nome_com);
+                    //console.log("added "+  element.nome_com);
+                }
+            });
+            return comuni;
+        }
+
+        function createCheckBox(comuni){
+            
+            let i = 1;
+            console.log(comuni)
+            comuni.forEach((comune) => {
+                let checkbox = '\
+                <div class="form-check">\
+                    <input class="form-check-input" type="checkbox" value="'+comune+'" id="filtro '+i+'">\
+                    <label class="form-check-label" for="flexCheckChecked">\
+                    '+comune+'\
+                    </label>\
+                </div>\
+                '
+                if (i < 11){
+                    document.getElementById('check1').innerHTML += checkbox
+                }else if (i <21){
+                    document.getElementById('check2').innerHTML += checkbox
+                }else if (i <31){
+                    document.getElementById('check3').innerHTML += checkbox
+                }else if (i <41){
+                    document.getElementById('check4').innerHTML += checkbox
+                }else if (i <51){
+                    document.getElementById('check5').innerHTML += checkbox
+                }else if (i <61){
+                    document.getElementById('check6').innerHTML += checkbox
+                }
+
+                i ++;
+            })
+            return comuni
+        }
+
+        function cerca(){
+            
+            let com_filter      = "";
+            let filtered        = false;
+            let comuni_filtrati = []
+
+            for (let i = 1; i<=comuni_totali.length; i++){
+                let checkbox = document.getElementById("filtro "+i)
+                if (checkbox.checked){
+                    filtered = true;
+                    com_filter += "'"+checkbox.value+"', "
+                }
+            }
+            com_filter = com_filter.substring(0, com_filter.length - 2);
+            if (filtered){
+                custom_url = ajax_url + "?$query=SELECT * WHERE nome_com in("+com_filter+")";
+            }else{
+                custom_url = ajax_url + "?$query=SELECT * WHERE id != 0";
+            }
+            if ((document.getElementById("lunghezza-min").value)){
+                custom_url += ' AND length > '+ document.getElementById("lunghezza-min").value
+            }
+            if ((document.getElementById("lunghezza-max").value)){
+                custom_url += ' AND length < '+ document.getElementById("lunghezza-max").value
+            }
+            dataset = [];
+            document.getElementById("list-tab").innerHTML = '';
+            document.getElementById("nav-tabContent").innerHTML ='';
+            fetch(custom_url+'ORDER BY nome_com')
+                .then(response => response.json())
+                .then(result => dataset = dataset.concat(result))
+                .then(() => fetch(custom_url+'AND id > 1000 ORDER BY nome_com')
+                                .then(response => response.json())
+                                .then(result => dataset = dataset.concat(result))
+                                .then(() => contaComuni(dataset))
+                                .then((comuni) => comuni_filtrati = comuni))
+                .then(() => createTable(comuni_filtrati))
+                .catch(err => console.log("error", err))
+
+        }
+
+        const ajax_url = 'https://www.dati.lombardia.it/resource/992m-35vj.json'; // da https://www.dati.lombardia.it/Territorio/PROVINCIA-MONZA-BRIANZA-Piste-ciclabili/xh9r-g2rn
+        fetch(ajax_url+'?$query=SELECT * ORDER BY nome_com')
+                .then(response => response.json())
+                .then(result => dataset = dataset.concat(result))
+                .then(() => fetch(ajax_url+'?$query= SELECT * WHERE id > 1000 ORDER BY nome_com')
+                                .then(response => response.json())
+                                .then(result => dataset = dataset.concat(result))
+                                .then(() => contaComuni(dataset)))
+                .then((comuni) => comuni_totali = comuni)
+                .then(() => createTable(comuni_totali))
+                .then(() => createCheckBox(comuni_totali))
+                .catch(err => console.log("error", err))
+
+    </script>
+
+  </body>
+</html>

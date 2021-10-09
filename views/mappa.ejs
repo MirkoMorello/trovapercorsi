@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mappa Percorsi</title>
+    <style>
+        #mapid { height: 1000px; }
+    </style>
+    <link rel='stylesheet' href='/bower_components/bootstrap/dist/css/bootstrap.css' /> <!--Bootstrap locale -->
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+
+
+  </head>
+  <body>
+    <div class="container">
+      <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+        <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+          <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
+        </a>
+  
+        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+          <li><a href="/" class="nav-link px-2 link-secondary">Home</a></li>
+          <li><a href="/list" class="nav-link px-2 link-dark">Percorsi</a></li>
+          <li><a href="/mappa" class="nav-link px-2 link-dark">Mappa</a></li>
+        </ul>
+  
+        <div class="col-md-3 text-end">
+          <% if (user) { %>
+          <a href="/users/logout" type="button" class="btn btn-outline-primary me-2">Logout</a>
+          <% } else {%>
+          <a href="/users/login" type="button" class="btn btn-outline-primary me-2">Login</a>
+          <a href="/users/register" type="button" class="btn btn-primary">Sign-up</a>
+          <% } %>
+        </div>
+      </header>
+    </div>
+    
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container">
+        <h1 class="display-4">Mappa</h1>
+        <p class="lead">Vuoi scoprire tutti i nostri percorsi? Questo è il luogo giusto!</p>
+      </div>
+    </div>
+  <!-- map-->
+    <div id="mapid"></div>
+  <!-- map-->
+
+    <script>
+    var map = L.map('mapid').setView([45.526631, 9.576685], 15);
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: 'pk.eyJ1IjoidGVoYmFuZ2VyIiwiYSI6IjAzOTk2YTVlODNkYTE5NDAzMjA1NjkyMzJmNzAyY2IxIn0.-Blawiw8um7RYAhfYofJ2Q'
+    }).addTo(map);
+
+    function onEachFeature(feature, layer) {
+      if (feature.properties && feature.properties.popupContent) {
+          layer.bindPopup(feature.properties.popupContent);
+      }
+    }
+
+    var data
+    function successXhr(){
+      data = JSON.parse(this.response);
+      console.log(data);
+      xhr2.onload = successXhr2;
+      xhr2.onerror = errorXhr;
+      xhr2.open('GET', 'https://www.dati.lombardia.it/resource/992m-35vj.json?$where=id%20%3E%201000'); // da https://www.dati.lombardia.it/Territorio/PROVINCIA-MONZA-BRIANZA-Piste-ciclabili/xh9r-g2rn
+      xhr2.send();
+    }
+    function successXhr2(){
+            data = data.concat(JSON.parse(this.response));
+            console.log(JSON.parse(this.response));
+            var features = [];
+            data.forEach(function(element){
+              let geojsonFeature = {
+              "type": "Feature",
+              "properties": {
+              "id" : element.id,
+              "comune": element.nome_com,
+              "provincia": element.provincia,
+              "popupContent": "Percorso numero "+element.id+"<br>Comune di "+element.nome_com+" in provincia di " +element.nome_pro+ "<br>lunghezza "+ element.length + " m<br><br><a href = 'percorso/"+element.id+"'>vai a questo percorso</a>"
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": element.the_geom.coordinates,
+              }
+              };
+            features.push(geojsonFeature);
+            });
+
+
+          L.geoJSON(features, {
+            onEachFeature: onEachFeature
+          }).addTo(map);
+          map.setView([data[753].the_geom.coordinates[0][1], data[753].the_geom.coordinates[0][0]], 12.2); // setto la visualizzazione più o meno in centro
+        }
+        function errorXhr(err){
+            console.log("error", err);
+        }
+        var xhr = new XMLHttpRequest();
+        var xhr2 = new XMLHttpRequest();
+        xhr.onload = successXhr;
+        xhr.onerror = errorXhr;
+        xhr.open('GET', 'https://www.dati.lombardia.it/resource/992m-35vj.json'); // da https://www.dati.lombardia.it/Territorio/PROVINCIA-MONZA-BRIANZA-Piste-ciclabili/xh9r-g2rn
+        xhr.send();
+        // qui al posto della fetch è stata utilizzata due semplici xmlhttprequest, per esercizio più che per pura necessità, anche perchè grazie alle pipe messe a disposizione dalla fetch, questo blocco di codice sarebbe risultato più pulito.
+        // guarda com'è stato fatto su list.ejs per vedere l'implementazione tramite fetch
+    </script>
+    <hr class="featurette-divider">
+      <footer class="container">
+        <p> Progetto Web Development Mirko Morello, (email) morello.mrk@gmail.com     (email) mirko.morello@studenti.unimi.it   (telegram) @MirkoMo </p>
+      </footer>
+  </body>
+</html>
