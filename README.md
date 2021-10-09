@@ -53,6 +53,8 @@ Attualmente, è stato utilizzato [Bower](https://bower.io/) per installare tutti
 
 In caso si voglia utilizzare il proprio processo di installazione di JQuery e Bootstrap, sarà necessario modificare il path dei vari file puntando alla propria installazione.
 
+Questa README è stata scritta in italiano solo e soltanto perchè è stata rushata, verrà tradotta in inglese non appena possibile
+
 ## Contribuzione
 Le Pull requests sono benvenute. Per modifiche sostanziose, per favore apri una issue per poter discutere di cosa si ha intenzione di modificare.
 
