@@ -14,6 +14,7 @@ Usare il package manager [npm](https://www.npmjs.com/) per installare tutte le d
 ```bash
 npm install .
 ```
+Questo progetto fa uso di [MongoDB](https://docs.mongodb.com/), sarà quindi necessario procedere ad una sua [installazione](https://docs.mongodb.com/manual/installation/) in caso non sia presente sulla macchina. L'indirizzo, la porta e la password utilizzata per la sua configurazione sono quelle di default (tranne per la password) e facilmente editabili dal file database.js
 
 ## Utilizzo
 
